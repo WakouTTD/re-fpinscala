@@ -21,10 +21,9 @@
 * [12章 アプリカティブファンクタとトラバーサブルファンクタ](./doctree/chapter12.md#fpinscala-輪読会-12)
 
 #### part4 作用とI/O
-* [13章 外部作用とI/O](blob/master/doctree/chapter13.md#fpinscala-輪読会-13)
-* [14章 局所作用とミュータブルな状態](blob/master/doctree/chapter14.md#fpinscala-輪読会-14)
-* [15章 ストリーム処理とインクリメンタルI/O](blob/master/doctree/chapter15.md#fpinscala-輪読会-15)
-
+* [13章 外部作用とI/O](./doctree/chapter13.md#fpinscala-輪読会-13)
+* [14章 局所作用とミュータブルな状態](./doctree/chapter14.md#fpinscala-輪読会-14)
+* [15章 ストリーム処理とインクリメンタルI/O](./doctree/chapter15.md#fpinscala-輪読会-15)
 
 [FPinScala英語](https://livebook.manning.com/book/functional-programming-in-scala/table-of-contents/)
 
