@@ -1,5 +1,4 @@
-## fpinscala 輪読会 #2
----
+# fpinscala 輪読会 #2
 
 ## 第2章 Scala関数型プログラミングの準備
 

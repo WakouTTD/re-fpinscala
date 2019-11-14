@@ -1,4 +1,4 @@
-# fpinscala 輪読会#8
+# fpinscala 輪読会 #8
 
 - 前章で学んだこと
 
