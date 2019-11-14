@@ -16,14 +16,14 @@
 * [9章 パーサーコンビネータ](./doctree/chapter09.md#fpinscala-輪読会-9)
 
 #### part3 関数型デザインに共通する構造
-* [10章 モノイド](./doctree/chapter10.md#fpinscala-輪読会-10)
-* [11章 モナド](./doctree/chapter11.md#fpinscala-輪読会-11)
+* [10章 モノイド](./doctree/chapter10.md#fpinscala-輪読会-10#fpinscala-輪読会-10)
+* [11章 モナド](./doctree/chapter11.md#fpinscala-輪読会-11#fpinscala-輪読会-11)
 * [12章 アプリカティブファンクタとトラバーサブルファンクタ](./doctree/chapter12.md#fpinscala-輪読会-12)
 
 #### part4 作用とI/O
-* [13章 外部作用とI/O](blob/master/doctree/chapter13.md)
-* [14章 局所作用とミュータブルな状態](blob/master/doctree/chapter14.md)
-* [15章 ストリーム処理とインクリメンタルI/O](blob/master/doctree/chapter15.md)
+* [13章 外部作用とI/O](blob/master/doctree/chapter13.md#fpinscala-輪読会-13)
+* [14章 局所作用とミュータブルな状態](blob/master/doctree/chapter14.md#fpinscala-輪読会-14)
+* [15章 ストリーム処理とインクリメンタルI/O](blob/master/doctree/chapter15.md#fpinscala-輪読会-15)
 
 
 [FPinScala英語](https://livebook.manning.com/book/functional-programming-in-scala/table-of-contents/)
