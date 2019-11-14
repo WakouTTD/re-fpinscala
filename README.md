@@ -3,8 +3,8 @@
 ## 目次
 
 #### part1
-* [1章 関数型プログラミングとは](blob/master/doctree/chapter01.md)
-* [2章 Scala関数型プログラミングの準備](blob/master/doctree/chapter02.md)
+* [1章 関数型プログラミングとは](doctree/chapter01.md)
+* [2章 Scala関数型プログラミングの準備](./doctree/chapter02.md)
 * [3章 関数型プログラミングのデータ構造](blob/master/doctree/chapter03.md)
 * [4章 例外を使わないエラー処理](blob/master/doctree/chapter04.md)
 * [5章 正格と遅延](blob/master/doctree/chapter05.md)
