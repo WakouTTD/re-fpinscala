@@ -1,9 +1,56 @@
 # fpinscala 輪読会 #12
 
+
+前章がモナド
+本章ではモナドに関連する抽象概念としてアプリカティブファンクタ(applicative functor)を
+取り上げる。
+
+アプリカンティブファンクタはモナドほど強力ではないが、モナドよりも汎用的
+
+アプリカンティブファンクタに基づいて、トラバーサルファンクタ(traversable functor)という
+もう一つの便利な抽象概念も明らかにする。
+
+
 #### 12.1 モナドの一般化
+
+```scala=
+def sequence[A](lfa: List[F[A]]): F[List[A]]
+ traverse(lfa)(fa => fa)
+
+def traverse[A, B](as: List[A])(f: A => F[B]):F[List[B]]
+  as.foldRight(unit(List[B]()))((a, mbs) => map2(f(a), mbs)(_ :: _))
+```
+
+#### 復習
+unitは単元
+
+
+traverseの実装では、map2とunitが使用されています。
+map2については、flatMapを使って実装できることがわかった。
+
+
+```scala=
+def map2[A, B, C](ma: F[A], mb: F[B])(f: (A, B) => C): F[C] =
+  flatMap(ma)(a => map(mb)(b => f(a, b)))
+```
+
+
+
 #### 12.2 アプリカティブトレイト
+
+```scala=
+```
+
 #### 12.3 モナドとアプリカディブファンクタの違い
+
+```scala=
+```
+
 ##### 12.3.1 OptionアプリカティブとOptionモナド
+
+```scala=
+```
+
 ##### 12.3.2 ParseアプリカティブとParseモナド
 
 #### 12.4 アプリカティブファンクタの利点

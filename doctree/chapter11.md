@@ -9,6 +9,36 @@
 
 ### 11.1 ファンクタ:map関数の一般化
 
+```scala=
+def map[A,B](ga: Gen[A])(f: A => B): Gen[B]
+
+def map[A,B](pa: Parser[A])(f: A => B): Parser[B]
+
+def map[A,B](oa: Option[A])(f: A => B): Option[B]
+```
+
+型シグネチャの違いは、具体的なデータ型(Gen,Parser,Option)のみ
+
+この「mapを実装するデータ型」という発送をScalaのトレイトとして表せる
+
+#### リスト 11-1
+```scala=
+trait Functor[F[_]] {
+  def map[A,B](fa: F[A])(f: A => B): F[B]
+}
+```
+型コンストラクタF[_]でmapをパラメータ化
+
+
+#### リスト 11-2
+```scala=
+val listFunctor = new Functor[List] {
+  def map[A,B](as: List[A])(f: A => B): List[B] = as map f
+}
+```
+
+
+
 #### 11.1.1 ファンクタ則
 
 ### 11.2 モナド:flatMapと単位関数の一般化
