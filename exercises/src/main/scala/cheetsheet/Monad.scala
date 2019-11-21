@@ -3,6 +3,8 @@ package cheetsheet
 trait Monad[F[_]] {
   def pure[A](a: A): F[A]
   def flatMap[A, B](fa: F[A])(f: A => F[B]):F[B]
+
+  def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(fa)(a => pure(f(a)))
 }
 
 object Monad {
@@ -39,7 +41,10 @@ trait MonadSyntax {
     new MonadOps(fa)
 }
 
-class MonadOps[F[_], A](val fa: F[A]) extends
+class MonadOps[F[_], A](val fa: F[A]) extends AnyVal {
+  def map[B](f:A => B)(implicit M: Monad[F]): F[B] = M.map(fa)(f)
+  def flatMap[B](f: A => F[B])(implicit M: Monad[F]): F[B] = M.flatMap(fa)(f)
+}
 
 
 object Main {
