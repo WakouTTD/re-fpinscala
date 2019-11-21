@@ -1,13 +1,14 @@
 package cheetsheet
 
-import cheetsheet._
-import org.scalacheck.Properties
+import org.scalatest.FlatSpec
 
-class MonadSpec extends Properties("Monad") {
-  def law: Monad.Law[Maybe] = new Monad.Law[Maybe] {
-    override val M = Maybe.maybeInstances
+class MonadSpec extends FlatSpec {
+
+  "for式で合成するため" should "型クラスのインスタンスを定義しただけではfor式で合成できない" in {
+//      for {
+//        i <- Maybe.just(1)
+//        j <- Maybe.just(2)
+//      } yield i + j
   }
-
-  def odd(i: Int): Maybe[Int] = if (i % 2!= 0)
 
 }

@@ -1,6 +1,5 @@
 package cheetsheet
 
-import cheetsheet._
 trait MonadLaw[F[_]] {
   def M: Monad[F]
 

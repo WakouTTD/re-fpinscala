@@ -1,5 +1,8 @@
 #モナド
 
+ほぼ写経
+https://speakerdeck.com/aoiroaoino/scala-niokerumonadotutehe-darou
+
 ```scala=
 // M[_]はモナドの型
 def pure[A](a: A): M[A]
@@ -121,23 +124,79 @@ implicit val maybeInstances: Monad[Maybe] =
 抽象的なモナドの実装--動作確認
 
 ```shell=
-
+val n = Monad[Maybe].pure(42)
+Monad[Maybe].flatMap(n){ i =>
+  if (i > 0) Maybe.just(i) else Maybe.empty[Int]
+}
 ```
 
 
 
+抽象的なモナドの実装--モナド則を満たすか
 
 ```scala=
+trait MonadLaw[F[_]] {
+  def M: Monad[F]
+
+  def leftIdentity[A, B](a: A, f: A => F[B]): Boolean =
+    M.flatMap(M.pure(a))(f) == f(a)
+
+  def rightIdentity[A](fa: F[A]): Boolean =
+    M.flatMap(fa)(M.pure) == fa
+
+  def associativity[A, B, C](fa: F[A], f: A => F[B], g: B => F[C]): Boolean =
+    M.flatMap(M.flatMap(fa)(f))(g) == M.flatMap(fa)(a => M.flatMap(f(a))(g))
+}
 ```
-
-
-
 
 ```scala=
+class MonadPropertiesSpec extends Properties("Monad") {
+  def law: MonadLaw[Maybe] =
+    new MonadLaw[Maybe] { override val M = Maybe.maybeInstances }
+
+  def odd(i: Int): Maybe[Int]  = if (i % 2 != 0) Just(i) else Empty()
+  def fizz(i: Int): Maybe[Int] = if (i % 3 == 0) Just(i) else Empty()
+  def buzz(i: Int): Maybe[Int] = if (i % 5 == 0) Just(i) else Empty()
+
+  //左単位元
+  property("leftIdentity") = Prop.forAll { i: Int =>
+    println(s"leftIdentityのi=$i")
+    law.leftIdentity(i, fizz)
+  }
+  //右単位元
+  property("rightIdentity") = Prop.forAll { i: Int =>
+    println(s"rightIdentityのi=$i")
+    law.rightIdentity(buzz(i))
+  }
+  // 結合律
+  property("associativity") = Prop.forAll { i: Int =>
+    println(s"associativityのi=$i")
+    law.associativity(odd(i), fizz, buzz)
+  }
+}
 ```
 
+```shell=
+sbt:exercises> test
+[info] + Monad.rightIdentity: OK, passed 100 tests.
+[info] + Monad.leftIdentity: OK, passed 100 tests.
+[info] + Monad.associativity: OK, passed 100 tests.
+[info] ScalaCheck
+[info] Passed: Total 3, Failed 0, Errors 0, Passed 3
+```
 
+抽象的なモナドの実装--for式で合成するために
+```scala=
+// コンパイル通らない
+//  for {
+//    i <- Maybe.just(1)
+//    j <- Maybe.just(2)
+//  } yield i + j
+```
 
+抽象的なモナドの実装--for式で合成するために
+- 型クラスのインスタンスを定義しただけではfor式で合成できない
+- for式が展開された後のシグネチャに合わせたmap/flatMapが必要
 
 
 
