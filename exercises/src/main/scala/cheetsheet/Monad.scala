@@ -5,6 +5,18 @@ trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]):F[B]
 
   def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(fa)(a => pure(f(a)))
+
+  def M: Monad[F]
+
+  def leftIdentity[A, B](a: A, f: A => F[B]): Boolean =
+    M.flatMap(M.pure(a))(f) == f(a)
+
+  def rightIdentity[A](fa: F[A]): Boolean =
+    M.flatMap(fa)(M.pure) == fa
+
+  def associativity[A, B, C](fa: F[A], f: A => F[B], g: B => F[C]): Boolean =
+    M.flatMap(M.flatMap(fa)(f))(g) == M.flatMap(fa)(a => M.flatMap(f(a))(g))
+
 }
 
 object Monad {
@@ -12,11 +24,19 @@ object Monad {
   def apply[F[_]](implicit M: Monad[F]): Monad[F] = M
 }
 
-sealed abstract class Maybe[A]
-
+sealed abstract class Maybe[A] {
+  def flatMap[B](f: A => Maybe[B]): Maybe[B] = this match {
+    case Just(a) => f(a)
+    case Empty() => Empty()
+  }
+  // デフォルト実装
+  //def map[B](f: A => B): Maybe[B] = flatMap(a => Maybe.pure(f(a)))
+  def map[B](f: A => B): Maybe[B] = flatMap(a => Maybe.just(f(a)))
+}
 case class Just[A](a: A) extends Maybe[A]
 case class Empty[A]() extends Maybe[A]
 
+//object Maybe extends MonadSyntax {
 object Maybe {
 
   implicit val maybeInstances: Monad[Maybe] =
@@ -56,6 +76,16 @@ object Main {
       if (i > 0) Maybe.just(i) else Maybe.empty[Int]
     }
     println(monad)
+
+    val toMonadOps = for {
+      i <- Maybe.just(1)
+      j <- Maybe.just(2)
+    } yield {
+      i + j
+    }
+    println(s"toMonadOps:$toMonadOps")
+
+
   }
 
 }

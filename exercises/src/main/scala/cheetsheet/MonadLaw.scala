@@ -1,5 +1,5 @@
 package cheetsheet
-
+/*
 trait MonadLaw[F[_]] {
   def M: Monad[F]
 
@@ -13,3 +13,4 @@ trait MonadLaw[F[_]] {
     M.flatMap(M.flatMap(fa)(f))(g) == M.flatMap(fa)(a => M.flatMap(f(a))(g))
 
 }
+*/

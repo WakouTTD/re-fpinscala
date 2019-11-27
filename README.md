@@ -28,3 +28,5 @@
 [FPinScala英語](https://livebook.manning.com/book/functional-programming-in-scala/table-of-contents/)
 
 [FpinScala解答](https://github.com/fpinscala/fpinscala)
+
+[tap and pipe methods](./doctree/tap_and_pipe_methods.md)
