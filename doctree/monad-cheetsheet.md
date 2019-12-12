@@ -21,9 +21,101 @@ implicit object Int extends IntOrdering
 def max[B >: A](implicit cmp: Ordering[B]): A
 ```
 
+型クラスには法則がある
+たとえるならJavaのequalsとhashCodeが特定の法則を満たさなければいけないようなもの
 
+先ほどのOrderingならば
+a > b かつ b > c なら
+a > c となる(推移律)
 
+モナドの型クラスの定義
+```scala=
+trait Monad[F[_]]{
+  def bidn[A, B](fa: F[A])(f: A => F[B]): F[B]
+  def point[A](a: => A): F[A]
+}
+```
 
+### モナド則とは
+```haskell=
+return a >>= k == k a
+ m >>= return == m
+ m >>= (＼x -> k x >>= h) == (m >>= k) >>= h
+```
+
+モナド則その1
+[scalazのMonadLaw](https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L73)
+```scala=
+def leftIdentity[A, B](a: A, f: A => F[B])(implicit FB: Equal[F[B]]): Boolean = FB.equal(bind(point(a))(f), f(a))
+```
+
+モナド則その2
+[scalazのMonadLaw](https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L71)
+```scala=
+def rightIdentity[A](a: F[A])(implicit FA: Equal[F[A]]): Boolean = FA.equal(bind(a)(point(_: A)), a)
+```
+
+モナド則その3
+[scalazのMonadLaw](https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L40-41)
+```scala=
+def associativeBind[A, B, C](fa: F[A], f: A => F[B], g: B => F[C])(implicit FC: Equal[F[C]]): Boolean =
+  FC.equal(bind(bind(fa)(f))(g), bind(fa)((a: A) => bind(f(a))(g)))
+```
+
+scalazには[モナド則が満たされているかどうかをテストする仕組み](https://github.com/scalaz/scalaz/blob/v7.1.0-M4/scalacheck-binding/src/main/scala/scalaz/scalacheck/ScalazProperties.scala#L191-L207)
+```scala=
+  object monad {
+    def rightIdentity[M[_], X](implicit M: Monad[M], e: Equal[M[X]], a: Arbitrary[M[X]]) =
+      forAll(M.monadLaw.rightIdentity[X] _)
+
+    def leftIdentity[M[_], X, Y](implicit am: Monad[M], emy: Equal[M[Y]], ax: Arbitrary[X], af: Arbitrary[(X => M[Y])]) =
+      forAll(am.monadLaw.leftIdentity[X, Y] _)
+
+    def laws[M[_]](implicit a: Monad[M], am: Arbitrary[M[Int]],
+                   af: Arbitrary[Int => M[Int]], ag: Arbitrary[M[Int => Int]], e: Equal[M[Int]]) = new Properties("monad") {
+      include(applicative.laws[M])
+      include(bind.laws[M])
+
+      property("right identity") = monad.rightIdentity[M, Int]
+      property("left identity") = monad.leftIdentity[M, Int, Int]
+
+    }
+  }
+```
+
+型クラスにも"継承"という概念が存在する
+ここからモナドと他の型クラスの継承関係について
+
+Monadの親の型クラス
+・InvariantFuture (これはめったに使わない、2.13であるかも未調査)
+・Functor
+・Apply
+・Bind
+・Applicative
+
+ScalazとHaskellと違い
+・Haskellの標準ライブラリにはFunctor,Applicative,Monadの3つのみ
+・Haskellの場合それら3つは継承関係ではない
+・Haskellの標準ライブラリには存在しないApply,BindがScalazにはある
+・Haskellの標準ライブラリにはsemigroupはない
+・その他いろいろ
+
+・Applyならば、必ずFunctorになる
+・Applicativeならば、必ずApplyになる
+・Bindならば、必ずApplyになる
+・Monadならば、必ずApplicativeになる
+・Monadならば、必ずBindになる
+・BindにはなるがMonadにはならない例が存在する(Mapなど)
+・ApplicativeにはなるがMonadにはならない例(scalaz.Valiationなど)
+
+よくある誤解
+・Monadではない、むしろMonadと呼ぶには間違っている(単なるApplicativeの例に対して)Monadという言葉を使う
+・Monadではなく、MonadPlusが関係することに関してMonadという言葉を使う
+・参考:[HaskellのdoとScalaのfor式とEitherとMonadPlus](https://xuwei-k.hatenablog.com/entry/20130517/1368814058)
+
+先ほど説明したように一般的にMonadが満たすべき性質は3つ
+しかし、ScalazのMonadは多くのの型クラスを継承している
+よって、親の型クラスの性質を満たさなければならない
 
 
 
